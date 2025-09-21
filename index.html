@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Visor 360º — Leaflet + Photo Sphere Viewer</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Photo Sphere Viewer -->
+  <script defer src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/uevent@2.0.0/browser.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.8.1/dist/photo-sphere-viewer.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.8.1/dist/photo-sphere-viewer.min.js"></script>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <main>
+    <!-- Barra lateral -->
+    <aside id="sidebar">
+      <h2>Fotografías panorámicas 360º</h2>
+      <ul id="panoramaList"></ul>
+    </aside>
+
+    <!-- Mapa -->
+    <div id="map" aria-label="Mapa con panorámicas 360"></div>
+  </main>
+
+  <!-- Modal visor 360 -->
+  <div id="viewerModal" aria-hidden="true">
+    <div id="viewerWrap" role="dialog" aria-modal="true" aria-label="Visor 360 grados">
+      <button id="closeBtn" aria-label="Cerrar visor">×</button>
+      <div id="viewerContainer" role="document"></div>
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-left">
+        <img src="assets/img/logos/logo.png" alt="Logo Pedralcg" class="logo-footer" />
+        <div class="footer-text">
+          <div>© 2025 Pedro Alcoba Gómez</div>
+          <div>@pedralcg</div>
+        </div>
+      </div>
+      <div class="footer-center">
+        Proyecto Leaflet + Photo Sphere Viewer — Visor de fotos 360º
+      </div>
+      <div class="footer-right">
+        <nav class="footer-enlaces">
+          <a href="https://pedralcg.github.io" target="_blank" rel="noopener noreferrer">Mi web principal</a>
+          <a href="https://github.com/pedralcg/visor-360" target="_blank" rel="noopener noreferrer">Repositorio GitHub</a>
+        </nav>
+        <div class="footer-contacto">
+          ¿Algo no funciona? <a href="mailto:pedralcg.dev@gmail.com">Contáctame</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App JS -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
