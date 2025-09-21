@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadPanoramas = async () => {
     spinner.style.display = 'block';
     try {
-      const resp = await fetch(`data/panoramas.geojson?t=${Date.now()}`);
+      const resp = await fetch(`./data/panoramas.geojson?t=${Date.now()}`);
       if (!resp.ok) throw new Error(`Error ${resp.status}`);
       const geojson = await resp.json();
 
