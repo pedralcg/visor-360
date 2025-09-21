@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const searchInput = controlsEl.querySelector('#searchInput');
   const sortSelect = controlsEl.querySelector('#sortSelect');
+  const resultsCountEl = document.createElement('p');
+  resultsCountEl.className = 'results-count';
+  listEl.parentNode.insertBefore(resultsCountEl, listEl);
 
   // --- Spinner ---
   const spinner = document.createElement('div');
@@ -66,9 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
     html: `
       <div class="camera-marker" aria-hidden="true">
         <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="11" fill="#8B5CF6" stroke="#7C3AED" stroke-width="2"/>
+          <circle cx="12" cy="12" r="11" fill="#6c5ce7" stroke="#5a4bcf" stroke-width="2"/>
           <path d="M9 9L7 7H5C4.45 7 4 7.45 4 8V16C4 16.55 4.45 17 5 17H19C19.55 17 20 16.55 20 16V8C20 7.45 19.55 7 19 7H17L15 9H9Z" fill="white"/>
-          <circle cx="12" cy="12.5" r="2.5" fill="#8B5CF6"/>
+          <circle cx="12" cy="12.5" r="2.5" fill="#6c5ce7"/>
           <circle cx="12" cy="12.5" r="1" fill="white"/>
         </svg>
       </div>
@@ -88,11 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // mostrar modal
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
 
-    // limpiar visor previo
     if (viewerInstance) {
       try { viewerInstance.destroy(); } catch (err) { console.warn(err); }
       viewerInstance = null;
@@ -108,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         navbar: ['autorotate', 'zoom', 'fullscreen']
       });
 
-      // API moderna v4+
       viewerInstance.on('ready', () => {
         console.log('✅ PSV listo:', panoramaUrl);
       });
@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Array panoramas ---
   let panoramas = [];
+  let currentActive = null;
 
   function createPopupContent(p) {
     return `
@@ -156,6 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderList(items) {
     listEl.innerHTML = '';
+    resultsCountEl.textContent = `Mostrando ${items.length} panorámicas.`;
+    
     if (!items || items.length === 0) {
       const liEmpty = document.createElement('li');
       liEmpty.className = 'empty';
@@ -167,23 +170,34 @@ document.addEventListener('DOMContentLoaded', () => {
     items.forEach((p) => {
       const li = document.createElement('li');
       li.className = 'panorama-item';
+      li.dataset.title = escapeHtml(p.title || '');
+
+      const truncatedDesc = truncate(p.description || '', 120);
 
       const thumbHTML = p.thumbnail
-        ? `<img src="${escapeHtml(p.thumbnail)}" alt="Vista previa de ${escapeHtml(p.title || '')}">`
-        : `<div class="thumb-placeholder"></div>`;
+        ? `<img src="${escapeHtml(p.thumbnail)}" alt="Vista previa de ${escapeHtml(p.title || '')}" loading="lazy" onerror="this.outerHTML = '<div class=\'thumb-placeholder\'><span>Vista previa de ${escapeHtml(p.title || '')}</span></div>';">`
+        : `<div class="thumb-placeholder"><span>Vista previa de ${escapeHtml(p.title || '')}</span></div>`;
 
       li.innerHTML = `
         ${thumbHTML}
         <div class="panorama-meta">
           <strong>${escapeHtml(p.title || 'Sin título')}</strong>
-          ${p.description ? `<div class="panorama-desc">${escapeHtml(truncate(p.description || '', 120))}</div>` : ''}
+          ${p.description ? `<div class="panorama-desc" title="${escapeHtml(p.description)}">${truncatedDesc}</div>` : ''}
           <small class="panorama-date">${escapeHtml(p.date || '')}</small>
         </div>
-        <button class="open-360" type="button" data-file="${escapeHtml(p.file || '')}" data-title="${escapeHtml(p.title || '')}">Ver 360º</button>
+        <button class="open-360" type="button" data-file="${escapeHtml(p.file || '')}" data-title="${escapeHtml(p.title || '')}">
+          <i class="fas fa-camera"></i> Ver 360º
+        </button>
       `;
-
       listEl.appendChild(li);
     });
+    
+    if (currentActive) {
+      const activeItem = listEl.querySelector(`[data-title="${currentActive.dataset.title}"]`);
+      if (activeItem) {
+        activeItem.classList.add('active');
+      }
+    }
   }
 
   function updateList() {
@@ -217,7 +231,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!resp.ok) throw new Error(`Error ${resp.status}`);
       const geojson = await resp.json();
 
-      const baseUrl = window.location.origin + '/';
+      const getBaseUrl = () => {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          return window.location.origin + '/';
+        } else {
+          const pathParts = window.location.pathname.split('/').filter(p => p !== '');
+          const repoName = pathParts[0];
+          return `${window.location.origin}/${repoName}/`;
+        }
+      };
+      
+      const baseUrl = getBaseUrl();
+      console.log('Base URL:', baseUrl);
 
       const resolvePath = (path) => {
         if (!path) return '';
@@ -264,7 +289,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = btn.dataset.title || '';
     if (!file) return;
 
-    const found = panoramas.find(p => p.file === file || p.title === title);
+    if (currentActive) {
+      currentActive.classList.remove('active');
+    }
+
+    const listItem = btn.closest('li');
+    if (listItem) {
+      listItem.classList.add('active');
+      currentActive = listItem;
+    }
+
+    const found = panoramas.find(p => p.file === file);
     if (found && found._marker) {
       map.setView(found._marker.getLatLng(), Math.max(map.getZoom(), 14), { animate: true });
       found._marker.openPopup();

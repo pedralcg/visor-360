@@ -63,6 +63,29 @@ main {
   margin: 0;
 }
 
+/* === CONTROLES === */
+.panorama-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.panorama-controls input,
+.panorama-controls select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+.panorama-controls input {
+  flex: 1;
+}
+
+.results-count {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.5rem 0;
+}
+
 /* === LISTA PANORAMAS === */
 #panoramaList li {
   display: flex;
@@ -74,7 +97,11 @@ main {
   padding: 0.75rem;
   margin-bottom: 0.75rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s;
+}
+#panoramaList li.active {
+  border-color: var(--violet-main);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3);
 }
 #panoramaList li:hover {
   transform: translateY(-2px);
@@ -86,6 +113,21 @@ main {
   object-fit: cover;
   border-radius: 0.5rem;
   flex-shrink: 0;
+}
+#panoramaList li .thumb-placeholder {
+  width: 90px;
+  height: 65px;
+  background: #f0f0f0;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #888;
+  padding: 0.25rem;
+  flex-shrink: 0;
+  line-height: 1.2;
 }
 #panoramaList li .panorama-meta {
   flex: 1;
@@ -112,9 +154,14 @@ main {
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background 0.2s ease;
-  width: 50px;
-  height: 50px;
-  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 90px;
+  flex-shrink: 0;
 }
 #panoramaList li button:hover {
   background: var(--violet-dark);
@@ -153,6 +200,7 @@ main {
   background: none;
   border: none;
   transition: transform 0.2s;
+  z-index: 10;
 }
 #closeBtn:hover { transform: scale(1.1); }
 
