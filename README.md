@@ -112,7 +112,7 @@ Para dudas, sugerencias o reporte de errores:
 
 **Pedro Alcoba Gómez**  
 Técnico ambiental especializado en SIG, teledetección y desarrollo de visores web.  
-📧 [pedralcg@gmail.com](mailto:pedralcg@gmail.com)  
+📧 [pedralcg.dev@gmail.com](mailto:pedralcg.dev@gmail.com)  
 🌐 [https://pedralcg.github.io](https://pedralcg.github.io)
 
 ---
