@@ -1,5 +1,9 @@
 # Visor de imágenes 360º con Leaflet y Photo Sphere Viewer
 
+![Galería de fotografías 360° con los puntos de captura en el mapa](https://res.cloudinary.com/dhnr62lyo/image/upload/w_1200,f_auto,q_auto/v1772720368/pedralcg.dev/projects/mmmbvnnsjv74ap7vum54.png)
+
+**[Ver la demo en vivo](https://pedralcg.github.io/visor-360/)** · [Ficha del proyecto en pedralcg.dev](https://pedralcg.dev/projects/galeria-de-fotografias-360)
+
 Este proyecto es un visor web que permite explorar fotografías panorámicas y esféricas capturadas con **dron o dispositivo móvil**. Combina la potencia de **Leaflet** para la visualización cartográfica con **Photo Sphere Viewer** para la navegación interactiva de imágenes 360º.
 
 Está diseñado para representar en un mapa los puntos de captura de las panorámicas y abrirlas en un visualizador inmersivo directamente desde el visor.
